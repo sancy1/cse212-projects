@@ -7,11 +7,17 @@
 /// less than they will stay in the queue forever.  If a person is out of turns then they will 
 /// not be added back into the queue.
 /// </summary>
+/// 
+
+
+/// <summary>
+/// Circular queue where people take turns with finite or infinite repetitions
+/// </summary>
 public class TakingTurnsQueue
 {
-    private readonly PersonQueue _people = new();
+    private readonly Queue<Person> _people = new Queue<Person>();
 
-    public int Length => _people.Length;
+    public int Length => _people.Count;
 
     /// <summary>
     /// Add new people to the queue with a name and number of turns
@@ -20,8 +26,7 @@ public class TakingTurnsQueue
     /// <param name="turns">Number of turns remaining</param>
     public void AddPerson(string name, int turns)
     {
-        var person = new Person(name, turns);
-        _people.Enqueue(person);
+        _people.Enqueue(new Person(name, turns));
     }
 
     /// <summary>
@@ -33,25 +38,25 @@ public class TakingTurnsQueue
     /// </summary>
     public Person GetNextPerson()
     {
-        if (_people.IsEmpty())
+        if (_people.Count == 0)
         {
             throw new InvalidOperationException("No one in the queue.");
         }
-        else
+
+        var person = _people.Dequeue();
+        
+        // Handle infinite turns (0 or negative)
+        if (person.Turns <= 0)
         {
-            Person person = _people.Dequeue();
-            if (person.Turns > 1)
-            {
-                person.Turns -= 1;
-                _people.Enqueue(person);
-            }
-
-            return person;
+            _people.Enqueue(new Person(person.Name, person.Turns));
         }
-    }
+        // Handle finite turns
+        else if (person.Turns > 1)
+        {
+            _people.Enqueue(new Person(person.Name, person.Turns - 1));
+        }
+        // Else (turns == 1): don't requeue
 
-    public override string ToString()
-    {
-        return _people.ToString();
+        return person;
     }
 }
