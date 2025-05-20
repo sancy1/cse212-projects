@@ -9,5 +9,8 @@ public class Program
 
         Console.WriteLine("\n======================\nTranslator\n======================");
         Translator.Run();
+
+        Console.WriteLine("\n======================\nTranslator Instructor Solution\n======================");
+        TranslatorSolution.Run();
     }
 }
