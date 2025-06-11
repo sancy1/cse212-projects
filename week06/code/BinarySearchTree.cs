@@ -1,3 +1,6 @@
+
+// BinarySearchTree.cs
+
 using System.Collections;
 
 public class BinarySearchTree : IEnumerable<int>
@@ -68,7 +71,7 @@ public class BinarySearchTree : IEnumerable<int>
     /// <summary>
     /// Iterate backward through the BST.
     /// </summary>
-    public IEnumerable Reverse()
+    public IEnumerable<int> Reverse() // Changed return type to IEnumerable<int> for consistency
     {
         var numbers = new List<int>();
         TraverseBackward(_root, numbers);
@@ -81,6 +84,14 @@ public class BinarySearchTree : IEnumerable<int>
     private void TraverseBackward(Node? node, List<int> values)
     {
         // TODO Problem 3
+        // To traverse backward, we visit the right subtree first, then the current node,
+        // and finally the left subtree. This ensures values are added in descending order.
+        if (node is not null)
+        {
+            TraverseBackward(node.Right, values); // Recursively traverse the right subtree
+            values.Add(node.Data);               // Add the current node's data to the list
+            TraverseBackward(node.Left, values);  // Recursively traverse the left subtree
+        }
     }
 
     /// <summary>
